@@ -9,9 +9,36 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
 </head>
 <body>
- <div class="jumbotron">
-     <h1> ${greeting}</h1>
-     <p> ${tagline}</p>
- </div>
+<div class="jumbotron">
+    <h1> ${greeting}</h1>
+    <p> ${tagline}</p>
+</div>
+<%--<p id="p1"></p>--%>
+<%--<input type="text" id="inp"/>--%>
+<%--<button onclick="stopRequesting()">stop requesting</button>--%>
+<script>
+//    var input = document.getElementById("inp");
+//    input.oninput = function () {
+//        var http = new XMLHttpRequest();
+//        http.open('POST', '/changeText', true)
+//        http.send(input.value);
+//    }
+//
+//    var timerId = setTimeout(doIt, 1000);
+//
+//    function doIt() {
+//        var http = new XMLHttpRequest();
+//        http.open('GET', '/getText', false)
+//        http.send();
+//        if (http.status == 200) {
+//            document.getElementById("p1").innerHTML = http.responseText;
+//        }
+//        timerId = setTimeout(doIt, 1000);
+//    }
+//
+//    function stopRequesting() {
+//        clearTimeout(timerId);
+//    }
+</script>
 </body>
 </html>
