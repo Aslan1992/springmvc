@@ -13,32 +13,26 @@
     <h1> ${greeting}</h1>
     <p> ${tagline}</p>
 </div>
-<%--<p id="p1"></p>--%>
-<%--<input type="text" id="inp"/>--%>
-<%--<button onclick="stopRequesting()">stop requesting</button>--%>
+
+<a href="#" onclick="showForm()">Create own game</a>
+
+<form id="myForm" action="/createGame" hidden method="GET">
+    Give name for your game: <br>
+    <input type="text" name="gamename">
+    <input type="submit" value="create">
+</form>
+
+<p>Created games: </p>
+ <c:forEach items="${waitingGames}" var="waitingGame">
+     <a href="/enterForGame?gamename=${waitingGame.key}">${waitingGame.key}</a> <br>
+ </c:forEach>
 <script>
-//    var input = document.getElementById("inp");
-//    input.oninput = function () {
-//        var http = new XMLHttpRequest();
-//        http.open('POST', '/changeText', true)
-//        http.send(input.value);
-//    }
-//
-//    var timerId = setTimeout(doIt, 1000);
-//
-//    function doIt() {
-//        var http = new XMLHttpRequest();
-//        http.open('GET', '/getText', false)
-//        http.send();
-//        if (http.status == 200) {
-//            document.getElementById("p1").innerHTML = http.responseText;
-//        }
-//        timerId = setTimeout(doIt, 1000);
-//    }
-//
-//    function stopRequesting() {
-//        clearTimeout(timerId);
-//    }
+    function showForm() {
+        $("myForm").hidden = false;
+    }
+    function $(elementId) {
+        return document.getElementById(elementId);
+    }
 </script>
 </body>
 </html>

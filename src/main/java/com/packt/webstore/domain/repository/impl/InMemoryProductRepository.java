@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -28,6 +29,35 @@ public class InMemoryProductRepository implements ProductRepository {
         return result;
     }
 
+    @Override
+    public Product getProductById(String productId) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("id", productId);
+        Product product = jdbcTemplate.queryForObject("select * from products where id = :id",
+                params, new ProductMapper());
+        return product;
+    }
+
+    @Override
+    public void updateStock(String productId, long noOfUnits) {
+        String SQL = "update products set units_in_stock = :unitsInStock where id = :id";
+        Map<String, Object> params = new HashMap<>();
+        params.put("unitsInStock", noOfUnits);
+        params.put("id", productId);
+        jdbcTemplate.update(SQL, params);
+    }
+
+    @Override
+    public List<Product> getProductsByCategory(String category) {
+        List<Product> productsByCategory = new ArrayList<>();
+        for (Product p : getAllProducts()) {
+            if (category.equalsIgnoreCase(p.getCategory())) {
+                productsByCategory.add(p);
+            }
+        }
+        return productsByCategory;
+    }
+
     private static final class ProductMapper implements RowMapper<Product> {
 
         @Override
@@ -38,10 +68,11 @@ public class InMemoryProductRepository implements ProductRepository {
             product.setDescription(rs.getString("description"));
             product.setUnitPrice(rs.getBigDecimal("unit_price"));
             product.setManufacturer(rs.getString("manufacturer"));
-            product.setCategory(rs.getString("condition"));
+            product.setCategory(rs.getString("category"));
             product.setUnitsInStock(rs.getLong("units_in_stock"));
             product.setUnitsInOrder(rs.getLong("units_in_order"));
             product.setDiscontinued(rs.getBoolean("discontinued"));
+            product.setCondition(rs.getString("condition"));
             return product;
         }
     }
