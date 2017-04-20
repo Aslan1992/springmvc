@@ -1,7 +1,6 @@
 package com.packt.webstore.controller;
 
 import com.packt.webstore.domain.GameProcess;
-import com.packt.webstore.domain.Item;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -11,7 +10,6 @@ import org.springframework.web.bind.annotation.*;
 public class GameProcessController {
 
     private GameProcess currentGameProcess = new GameProcess();
-    private boolean secondPlayer = false;
 
     @RequestMapping(value = "/toServer", method = RequestMethod.POST)
     @ResponseBody
@@ -27,4 +25,23 @@ public class GameProcessController {
     }
 
 
+    @RequestMapping(value = "/new", method = RequestMethod.GET)
+    public String newGame() {
+        return "createGame";
+    }
+
+    @RequestMapping(value = "/new", method = RequestMethod.POST)
+    public String processNewGame(@RequestParam String name, Model model) {
+        GameProcess gameProcess = new GameProcess();
+        gameProcess.setName(name);
+        gameProcess.setStatus("waiting");
+        model.addAttribute("newGameProcess", gameProcess);
+        WelcomePageController.createdGames.add(gameProcess);
+        return "game";
+    }
+
+    @RequestMapping(value = "/connectToGame", method = RequestMethod.GET)
+    public String connectToGame() {
+        return "game";
+    }
 }

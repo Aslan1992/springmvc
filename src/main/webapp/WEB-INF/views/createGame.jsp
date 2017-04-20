@@ -10,22 +10,12 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
 </head>
 <body>
-<div class="jumbotron">
-    <h1> ${greeting}</h1>
-    <p> ${tagline}</p>
-</div>
-
-<a href="/new">create own game</a>
-
-<h4>Connect to created games: </h4>
-<c:forEach items="${createdGames}" var="game">
-    <a href="/connectToGame?name=${game.name}"><p>${game.name}</p></a>
-</c:forEach>
-
+<form:form>
+        <p>Enter name for game: </p>
+        <form:input path="name" id="name" type="text"/>
+        <input type="submit" value="ok">
+</form:form>
 <script>
-    function $(elementId) {
-        return document.getElementById(elementId);
-    }
 </script>
 </body>
 </html>

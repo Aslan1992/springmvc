@@ -5,42 +5,11 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Welcome</title>
+    <title>Game</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
-    <style>
-        table, th, td {
-            border: 1px solid black;
-            border-collapse: collapse;
-        }
-
-        th, td {
-            padding: 15px;
-        }
-    </style>
 </head>
 <body>
-<div class="jumbotron">
-    <h2> ${notification}</h2>
-    <p> ${status}</p>
-</div>
-<table id="mytable">
-    <tr>
-        <td id="00"></td>
-        <td id="01"></td>
-        <td id="02"></td>
-    </tr>
-    <tr>
-        <td id="10"></td>
-        <td id="11"></td>
-        <td id="12"></td>
-    </tr>
-    <tr>
-        <td id="20"></td>
-        <td id="21"></td>
-        <td id="22"></td>
-    </tr>
-</table>
-<button onclick="stopRequesting()">stop requesting</button>
+<h3>Game ${newGameProcess.name} is created. Status: ${newGameProcess.status}</h3>
 <script>
     function $(elementId) {
         return document.getElementById(elementId);

@@ -6,6 +6,10 @@ import java.util.Arrays;
 
 public class GameProcess {
 
+    private String name;
+
+    private String status;
+
     @JsonProperty("state")
     private String[][] state;
 
@@ -26,6 +30,22 @@ public class GameProcess {
 
     public void setVictoryItems(Item[] victoryItems) {
         this.victoryItems = victoryItems;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 
     @Override
