@@ -10,11 +10,11 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
 </head>
 <body>
-<form:form>
-        <p>Enter name for game: </p>
-        <form:input path="name" id="name" type="text"/>
-        <input type="submit" value="ok">
-</form:form>
+<form method="post">
+    <p>Enter name for game: </p>
+    <input type="text" name="name"/>
+    <input type="submit" value="ok">
+</form>
 <script>
 </script>
 </body>

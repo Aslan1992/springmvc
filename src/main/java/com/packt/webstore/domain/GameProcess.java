@@ -16,6 +16,13 @@ public class GameProcess {
     @JsonProperty("victoryItems")
     private Item[] victoryItems;
 
+    public GameProcess() {}
+
+    public GameProcess(String name, String status) {
+        this.name = name;
+        this.status = status;
+    }
+
     public String[][] getState() {
         return state;
     }

@@ -7,13 +7,74 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Game</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+    <style>
+        table, th, td {
+            border: 2px solid black;
+            border-collapse: collapse;
+        }
+        th, td {
+            text-align: center;
+            width: 60px;
+            height: 60px;
+            font-size: large;
+        }
+    </style>
 </head>
 <body>
-<h3>Game ${newGameProcess.name} is created. Status: ${newGameProcess.status}</h3>
+<h3 id="gameInfo"></h3>
+<table>
+    <tr>
+        <td id="00"></td>
+        <td id="01"></td>
+        <td id="02"></td>
+    </tr>
+    <tr>
+        <td id="10"></td>
+        <td id="11"></td>
+        <td id="12"></td>
+    </tr>
+    <tr>
+        <td id="20"></td>
+        <td id="21"></td>
+        <td id="22"></td>
+    </tr>
+</table>
+
+<button onclick="copyToUI()">copy to UI</button>
 <script>
     function $(elementId) {
         return document.getElementById(elementId);
     }
+
+    var url = window.location.toString();
+    var params = url.split('=');
+    var gameName = (params[1] != null) ? params[1] : "${gameName}";
+
+    var timerId = setTimeout(currentGameProcessInfo, 2000);
+
+    function currentGameProcessInfo() {
+//        var http = new XMLHttpRequest();
+//        http.open("GET", "/currentGameProcessInfo?name=" + gameName, false);
+//        http.send();
+//        $("gameInfo").innerHTML = http.responseText;
+//        timerId = setTimeout(currentGameProcessInfo, 2000);
+    }
+
+    var gameProcess;
+    
+    function copyToUI() {
+        var http = new XMLHttpRequest();
+        http.open("GET", "/fromServer", false);
+        http.send();
+        gameProcess = JSON.parse(http.responseText);
+        for(var i = 0; i < 3; i++) {
+            for(var j = 0; j < 3; j++) {
+                $(i+""+j).innerHTML = gameProcess.state[i][j];
+            }
+        }
+    }
+
+
     //    var myTable = $("mytable");
     //
     //    var http = new XMLHttpRequest();
@@ -21,11 +82,11 @@
     //
     //    var boardState;
     //
-    //    //Domain objects
-    //    function GameProcess(state) {
-    //        this.state = state;
-    //        var victoryItems = null;
-    //    }
+        //Domain objects
+        function GameProcess(state) {
+            this.state = state;
+            var victoryItems = null;
+        }
     //
     //    function Item(i, j) {
     //        this.i = i;
