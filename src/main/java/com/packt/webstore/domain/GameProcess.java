@@ -58,7 +58,9 @@ public class GameProcess {
     @Override
     public String toString() {
         return "GameProcess{" +
-                "state=" + Arrays.toString(state) +
+                "name='" + name + '\'' +
+                ", status='" + status + '\'' +
+                ", state=" + Arrays.toString(state) +
                 ", victoryItems=" + Arrays.toString(victoryItems) +
                 '}';
     }

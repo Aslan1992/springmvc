@@ -33,7 +33,7 @@ public class GameProcessController {
     }
 
     @RequestMapping(value = "/connectToGame", method = RequestMethod.GET)
-    public String connectToGame(@RequestParam String name) {
+    public String connectToGame(@RequestParam String name, Model model) {
         createdGames.stream()
                 .filter(gp -> gp.getName().equalsIgnoreCase(name))
                 .forEach(gp -> gp.setStatus(IN_PROGRESS));
@@ -54,23 +54,24 @@ public class GameProcessController {
 
     @RequestMapping(value = "/toServer", method = RequestMethod.POST)
     @ResponseBody
-    public String toServer(@RequestBody GameProcess gameProcess) {
+    public String toServer(@RequestBody GameProcess incomeGameProcess) {
+        for (GameProcess gp : createdGames) {
+            if (incomeGameProcess.getName().equalsIgnoreCase(gp.getName())) {
+                gp.setState(incomeGameProcess.getState());
+                System.out.println(gp.getName());
+            }
+        }
         return "success";
     }
 
     @RequestMapping(value = "/fromServer", method = RequestMethod.GET)
     @ResponseBody
-    public GameProcess fromServer() {
-        String[][] state = new String[3][3];
-        for (int i = 0; i < 3; i++) {
-            for (int j = 0; j < 3; j++) {
-                state[i][j] = "x";
+    public GameProcess fromServer(@RequestParam String name) {
+        for (GameProcess gp : createdGames) {
+            if(name.equalsIgnoreCase(gp.getName())) {
+                return gp;
             }
         }
-
-        GameProcess gameProcess = new GameProcess();
-        gameProcess.setState(state);
-
-        return gameProcess;
+        return null;
     }
 }
