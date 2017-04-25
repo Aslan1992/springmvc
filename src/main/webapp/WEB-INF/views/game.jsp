@@ -43,7 +43,6 @@
         <td id="22"></td>
     </tr>
 </table>
-<button onclick="fromServer()">from server</button>
 <script>
 
     var gameBoard = $("gameBoard");
@@ -99,6 +98,8 @@
         http.send(JSON.stringify(myObject));
     }
 
+    var timer = setTimeout(fromServer, 1000);
+
     function fromServer() {
         var http = new XMLHttpRequest();
         http.open('GET', '/fromServer?name=' + gameName, false);
@@ -109,6 +110,7 @@
         if ($("who").innerHTML !== "${player}") {
             gameBoard.onmouseup = listenMouseUp;
         }
+        timer = setTimeout(fromServer, 1000);
     }
 
     function drawOnUi(stateArr) {
@@ -118,7 +120,7 @@
             }
         }
     }
-    
+
     var timerId = setTimeout(currentGameProcessInfo, 1000);
 
     function currentGameProcessInfo() {

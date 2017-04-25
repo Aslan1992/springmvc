@@ -69,7 +69,6 @@ public class GameProcessController {
             if (incomeGameProcess.getName().equalsIgnoreCase(gp.getName())) {
                 gp.setState(incomeGameProcess.getState());
                 roles.put(gp.getName(), playerRole);
-
             }
         }
     }
@@ -79,6 +78,9 @@ public class GameProcessController {
     public GameProcess fromServer(@RequestParam String name) {
         for (GameProcess gp : createdGames) {
             if(name.equalsIgnoreCase(gp.getName())) {
+                if (gp.getState() == null) {
+                    gp.setState(new String[3][3]);
+                }
                 return gp;
             }
         }
