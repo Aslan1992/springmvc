@@ -44,7 +44,6 @@
     </tr>
 </table>
 <button onclick="fromServer()">from server</button>
-<%--<button onclick="createNewGame()">create new game</button>--%>
 <script>
 
     var gameBoard = $("gameBoard");
@@ -119,17 +118,7 @@
             }
         }
     }
-
-//    function createNewGame() {
-//        for (var i = 0; i < BOARD_SIZE; i++) {
-//            for (var j = 0; j < BOARD_SIZE; j++) {
-//                game.state[i][j] = "";
-//            }
-//        }
-//        drawOnUi(game.state);
-//        toServer(game);
-//    }
-
+    
     var timerId = setTimeout(currentGameProcessInfo, 1000);
 
     function currentGameProcessInfo() {
