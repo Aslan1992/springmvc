@@ -6,7 +6,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 @Controller
@@ -15,6 +17,7 @@ public class GameProcessController {
     private static List<GameProcess> createdGames = new ArrayList<>();
     private static final String IN_PROGRESS = "in progress";
     private static final String WAITING = "waiting";
+    private Map<String, String> roles = new HashMap<>();
 
     public static List<GameProcess> getCreatedGames() {
         return createdGames;
@@ -29,6 +32,7 @@ public class GameProcessController {
     public String processNewGame(@RequestParam String name, Model model) {
         createdGames.add(new GameProcess(name, WAITING));
         model.addAttribute("gameName", name);
+        model.addAttribute("player", "creator");
         return "game";
     }
 
@@ -37,6 +41,7 @@ public class GameProcessController {
         createdGames.stream()
                 .filter(gp -> gp.getName().equalsIgnoreCase(name))
                 .forEach(gp -> gp.setStatus(IN_PROGRESS));
+        model.addAttribute("player", "incomer");
         return "game";
     }
 
@@ -52,16 +57,21 @@ public class GameProcessController {
         return response;
     }
 
-    @RequestMapping(value = "/toServer", method = RequestMethod.POST)
+    @RequestMapping("/whoMadeStep")
     @ResponseBody
-    public String toServer(@RequestBody GameProcess incomeGameProcess) {
+    public String whoMadeStep(@RequestParam String name) {
+        return roles.get(name);
+    }
+
+    @RequestMapping(value = "/toServer", method = RequestMethod.POST)
+    public void toServer(@RequestBody GameProcess incomeGameProcess, @RequestParam String playerRole) {
         for (GameProcess gp : createdGames) {
             if (incomeGameProcess.getName().equalsIgnoreCase(gp.getName())) {
                 gp.setState(incomeGameProcess.getState());
-                System.out.println(gp.getName());
+                roles.put(gp.getName(), playerRole);
+
             }
         }
-        return "success";
     }
 
     @RequestMapping(value = "/fromServer", method = RequestMethod.GET)

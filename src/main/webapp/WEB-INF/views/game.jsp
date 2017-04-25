@@ -23,6 +23,9 @@
 </head>
 <body>
 <div id="gameInfo"></div>
+<h4>Creator - 'X', Incomer - 'O'</h4>
+<h4>Player: ${player}</h4>
+<div id="who"></div>
 <table id="gameBoard">
     <tr>
         <td id="00"></td>
@@ -40,11 +43,8 @@
         <td id="22"></td>
     </tr>
 </table>
-
-<button onclick="toServer(game)" disabled>to server</button>
 <button onclick="fromServer()">from server</button>
-<button onclick="createNewGame()">create new game</button>
-<button onclick="currentGameProcessInfo()">check status</button>
+<%--<button onclick="createNewGame()">create new game</button>--%>
 <script>
 
     var gameBoard = $("gameBoard");
@@ -56,14 +56,13 @@
     function GameProcess(name, state) {
         this.name = name;
         this.state = state;
-        var victoryItems;
+        var victoryItems = null;
     }
 
     var url = window.location.toString();
     var params = url.split('=');
     var gameName = (params[1] != null) ? params[1] : "${gameName}";
     const BOARD_SIZE = 3;
-
     var game = new GameProcess(gameName, initArrayOfBoardState());
 
     gameBoard.onmouseup = listenMouseUp;
@@ -71,8 +70,19 @@
     function listenMouseUp(e) {
         e = e || window.event;
         var elementId = (e.target || e.srcElement).id;
-        game.state[line(elementId)][column(elementId)] = "S";
+        var item = game.state[line(elementId)][column(elementId)];
+        if (item == undefined || item === "") {
+            game.state[line(elementId)][column(elementId)] = ("${player}" === "creator") ? "X" : "0";
+        }
+        toServer(game, "${player}");
         gameBoard.onmouseup = null;
+    }
+
+    function whoMadeStep() {
+        var http = new XMLHttpRequest();
+        http.open('GET', '/whoMadeStep?name=' + gameName, false);
+        http.send();
+        $("who").innerHTML = http.responseText;
     }
 
     function line(str) {
@@ -83,9 +93,9 @@
         return parseInt(str.charAt(1));
     }
 
-    function toServer(myObject) {
+    function toServer(myObject, playerRole) {
         var http = new XMLHttpRequest();
-        http.open('POST', '/toServer', false);
+        http.open('POST', '/toServer?playerRole=' + playerRole, false);
         http.setRequestHeader('Content-Type', 'application/json');
         http.send(JSON.stringify(myObject));
     }
@@ -95,8 +105,11 @@
         http.open('GET', '/fromServer?name=' + gameName, false);
         http.send();
         game = JSON.parse(http.responseText);
+        whoMadeStep();
         drawOnUi(game.state);
-        gameBoard.onmouseup = listenMouseUp;
+        if ($("who").innerHTML !== "${player}") {
+            gameBoard.onmouseup = listenMouseUp;
+        }
     }
 
     function drawOnUi(stateArr) {
@@ -107,14 +120,17 @@
         }
     }
 
-    function createNewGame() {
-        for (var i = 0; i < BOARD_SIZE; i++) {
-            for (var j = 0; j < BOARD_SIZE; j++) {
-                game.state[i][j] = "";
-            }
-        }
-        drawOnUi(game.state);
-    }
+//    function createNewGame() {
+//        for (var i = 0; i < BOARD_SIZE; i++) {
+//            for (var j = 0; j < BOARD_SIZE; j++) {
+//                game.state[i][j] = "";
+//            }
+//        }
+//        drawOnUi(game.state);
+//        toServer(game);
+//    }
+
+    var timerId = setTimeout(currentGameProcessInfo, 1000);
 
     function currentGameProcessInfo() {
         var http = new XMLHttpRequest();
@@ -122,45 +138,11 @@
         http.send();
         $("gameInfo").innerHTML = http.responseText;
         if (http.responseText.includes("in progress")) {
+            clearTimeout(timerId);
+        } else {
+            timerId = setTimeout(currentGameProcessInfo, 1000);
         }
     }
-
-    <%--var url = window.location.toString();--%>
-    <%--var params = url.split('=');--%>
-    <%--var gameName = (params[1] != null) ? params[1] : "${gameName}";--%>
-
-
-    <%--var xflag = true;--%>
-    <%--var timerId = setTimeout(currentGameProcessInfo, 2000);--%>
-    <%--var gameProcess = new GameProcess(gameName, initArrayOfBoardState());--%>
-
-
-
-
-    <%--function startGame() {--%>
-    <%--gameBoard.onmouseup = function(e) {--%>
-    <%--e = e || window.event;--%>
-    <%--var elementId = (e.target || e.srcElement).id;--%>
-    <%--var value = (xflag) ? "X" : "O";--%>
-    <%--if ($(elementId).innerHTML === "") {--%>
-    <%--var lineNumber = line(elementId);--%>
-    <%--var columnNumber = column(elementId);--%>
-    <%--gameProcess.state[lineNumber][columnNumber] = value;--%>
-    <%--xflag = !xflag;--%>
-    <%--toServer(gameProcess);--%>
-    <%--secondTimerId = setTimeout(fromServer, 1000);--%>
-    <%--}--%>
-    <%--}--%>
-    <%--}--%>
-
-    <%--function line(str) {--%>
-    <%--return parseInt(str.charAt(0));--%>
-    <%--}--%>
-
-    <%--function column(str) {--%>
-    <%--return parseInt(str.charAt(1));--%>
-    <%--}--%>
-
 
     function initArrayOfBoardState() {
         var boardState = new Array(BOARD_SIZE);
@@ -169,24 +151,6 @@
         }
         return boardState;
     }
-
-
-    <%--function drawUI(state) {--%>
-    <%--for (var i = 0; i < BOARD_SIZE; i++) {--%>
-    <%--for (var j = 0; j < BOARD_SIZE; j++) {--%>
-    <%--$(i + "" + j).innerHTML = state[i][j];--%>
-    <%--}--%>
-    <%--}--%>
-    <%--}--%>
-
-    <%----%>
-    <%--//Domain objects--%>
-    <%--function GameProcess(name, state) {--%>
-    <%--this.name = name;--%>
-    <%--this.state = state;--%>
-    <%--var victoryItems = null;--%>
-    <%--}--%>
-
 </script>
 </body>
 </html>
